@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>박연우 (Park Yeon-woo) - Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0b10',
+                            card: '#121420',
+                            accent: '#6366f1',
+                            secondary: '#a855f7',
+                            success: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 구글 폰트 적용 (Pretendard 스타일) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0a0b10;
+            overflow-x: hidden;
+        }
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* 스크롤바 디자인 커스텀 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0b10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #25283a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+        /* 글래스모피즘 헬퍼 클래스 */
+        .glass-panel {
+            background: rgba(18, 20, 32, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="text-slate-200 relative min-h-screen">
+
+    <!-- 인터랙티브 파티클 캔버스 배경 -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-auto"></canvas>
+
+    <!-- 메인 레이아웃 컨테이너 -->
+    <div class="relative z-10 max-w-6xl mx-auto px-4 py-8 lg:py-16">
+
+        <!-- 캔버스 컨트롤러 대시보드 (우측 상단 플로팅 바) -->
+        <div class="glass-panel rounded-2xl p-4 mb-8 flex flex-wrap items-center justify-between gap-4 shadow-2xl border border-indigo-500/20">
+            <div class="flex items-center gap-3">
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                </span>
+                <span class="text-sm font-bold tech-font text-indigo-400">CANVAS INTERACTIVE BACKGROUND</span>
+            </div>
+            <!-- 실시간 조정 슬라이더들 -->
+            <div class="flex flex-wrap items-center gap-6 text-xs text-slate-400">
+                <div class="flex items-center gap-2">
+                    <label for="particleCount">파티클 수:</label>
+                    <input type="range" id="particleCount" min="30" max="200" value="100" class="w-24 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                    <span id="countVal" class="tech-font text-indigo-400">100</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label for="particleSpeed">속도:</label>
+                    <input type="range" id="particleSpeed" min="1" max="10" value="3" class="w-24 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                    <span id="speedVal" class="tech-font text-indigo-400">3</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label for="particleTheme">컬러 테마:</label>
+                    <select id="particleTheme" class="bg-slate-800 text-slate-200 border border-slate-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-indigo-500">
+                        <option value="indigo">네온 인디고</option>
+                        <option value="purple">사이버 펑크</option>
+                        <option value="emerald">매트릭스 그린</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 히어로 헤더 섹션 -->
+        <header class="glass-panel rounded-3xl p-8 lg:p-12 mb-8 text-center relative overflow-hidden shadow-2xl border border-slate-800">
+            <!-- 데코 네온 반사 효과 -->
+            <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+            <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-semibold tracking-wider mb-6 border border-indigo-500/20 tech-font">
+                DEVELOPER & HARDWARE OPTIMIZER
+            </span>
+            <h1 class="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight">
+                박 연 우
+            </h1>
+            <p class="text-lg lg:text-xl text-slate-300 font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
+                가상 현실과 실제 하드웨어의 한계를 넘나들며 최상의 퍼포먼스를 설계합니다.
+            </p>
+
+            <!-- 기본 신상 정보 카드 그리드 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto pt-6 border-t border-slate-800">
+                <div class="flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-slate-900/40">
+                    <!-- 학력 아이콘 -->
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                    <span class="text-slate-300">동양미래대학교 재학 중</span>
+                </div>
+                <div class="flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-slate-900/40">
+                    <!-- 하드웨어 아이콘 -->
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+                    <span class="text-slate-300">시스템 튜닝 전문가 지향</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 세부 콘텐츠 그리드 -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- 왼쪽: 관심 분야 리스트 (Span 2) -->
+            <section class="lg:col-span-2 space-y-6">
+                <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2 mb-6">
+                    <span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span>
+                    관심 분야 및 연구 (Interests)
+                </h2>
+
+                <!-- 관심 분야 카드 1: VR & Unity -->
+                <div class="glass-panel rounded-2xl p-6 transition-all duration-300 hover:border-indigo-500/40 group">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-indigo-500/10 rounded-xl text-indigo-400 group-hover:bg-indigo-500/20 transition-colors">
+                            <!-- VR 헤드셋 모양 SVG -->
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8H3a2 2 0 00-2 2v4a2 2 0 002 2h18a2 2 0 002-2v-4a2 2 0 00-2-2zM6 12h.01M18 12h.01"/></svg>
+                        </div>
+                        <div class="space-y-2 flex-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">VR & Unity 가상 메타버스 연구</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Pico 4 Ultra 및 풀바디 모션 트래커를 결합한 최적화된 VR 환경 구현을 연구하고 있습니다. VRChat 내에서 Unity Modular Avatar(MA) 시스템 구조화를 설계하고, 풍부한 표현력을 위한 익스프레션 메뉴 최적화를 깊이 있게 학습합니다.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-indigo-400 tech-font">Unity 3D</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-indigo-400 tech-font">Modular Avatar</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-indigo-400 tech-font">Pico Connect</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 관심 분야 카드 2: 시스템 튜닝 -->
+                <div class="glass-panel rounded-2xl p-6 transition-all duration-300 hover:border-purple-500/40 group">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-purple-500/10 rounded-xl text-purple-400 group-hover:bg-purple-500/20 transition-colors">
+                            <!-- 칩 회로 SVG -->
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                        </div>
+                        <div class="space-y-2 flex-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">고성능 시스템 오버클러킹 & 벤치마킹</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                i9-13900K와 RTX 4090 및 DDR5 RAM을 기반으로 극대화된 메모리 튜닝과 전압 조정을 연구합니다. 병목 현상 완화, 특히 가상 현실 연산 도중 발생하는 L3 캐시 병목 현상에 초점을 두어 최적의 퍼포먼스를 조율합니다.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-purple-400 tech-font">BIOS Tuning</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-purple-400 tech-font">DDR5 Memory</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-purple-400 tech-font">RTX 4090 / L3 Cache</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 관심 분야 카드 3: 메카닉 시뮬레이터 -->
+                <div class="glass-panel rounded-2xl p-6 transition-all duration-300 hover:border-emerald-500/40 group">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 group-hover:bg-emerald-500/20 transition-colors">
+                            <!-- 조이스틱/게임패드 SVG -->
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
+                        </div>
+                        <div class="space-y-2 flex-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">SF 메카닉 설계 연구 (아머드 코어 VI)</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                기계적 밸런싱 구조 및 게임 메커니즘을 심층 분석합니다. EN 제네레이터 사양과 기체의 부스터(FLUEGEL) 보증 허용 중량에 따른 레이저 빔 라이플 및 중장갑 에너지(EN) 파츠 최적 조합 연구를 통해 시스템 밸런스를 고찰합니다.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-emerald-400 tech-font">System Balance</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-emerald-400 tech-font">Arquebus Theme</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-emerald-400 tech-font">Simulation Mechanics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 관심 분야 카드 4: 하드웨어 정비 -->
+                <div class="glass-panel rounded-2xl p-6 transition-all duration-300 hover:border-amber-500/40 group">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 group-hover:bg-amber-500/20 transition-colors">
+                            <!-- 렌치 SVG -->
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div class="space-y-2 flex-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">정밀 물리 기구 유지보수</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                에어소프트 기구 및 완구식 라이플(예: Kar98k 볼트액션 계열) 등의 정밀 메카니즘 정비에 심취해 있습니다. 스프링 장력, 탄피 추출 장치 및 노즐 손실 압력을 연구하며 내구성을 극대화하기 위한 정밀 부품 관리 지식을 실천합니다.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-amber-400 tech-font">Bolt Action Mechanism</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-amber-400 tech-font">Precision Parts</span>
+                                <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-amber-400 tech-font">Maintenance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- 오른쪽: 스펙, 학업 정보, 목표 (Span 1) -->
+            <aside class="space-y-6">
+                <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2 mb-6">
+                    <span class="w-1.5 h-6 bg-purple-500 rounded-full"></span>
+                    프로필 & 스펙 (Specs)
+                </h2>
+
+                <!-- 보유 고성능 시스템 장비 명세 -->
+                <div class="glass-panel rounded-2xl p-6 border border-slate-800 relative overflow-hidden">
+                    <h3 class="text-sm font-bold tracking-widest text-slate-400 tech-font uppercase mb-4">MAIN RIG SYSTEM</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b border-slate-800/60">
+                            <span class="text-xs text-slate-400 tech-font">CPU</span>
+                            <span class="text-sm text-slate-100 font-medium">Intel i9-13900K</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-800/60">
+                            <span class="text-xs text-slate-400 tech-font">GPU</span>
+                            <span class="text-sm text-indigo-400 font-bold">NVIDIA RTX 4090</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-800/60">
+                            <span class="text-xs text-slate-400 tech-font">BOARD</span>
+                            <span class="text-sm text-slate-100 font-medium">Gigabyte Z790 Aorus Elite</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-800/60">
+                            <span class="text-xs text-slate-400 tech-font">GEAR</span>
+                            <span class="text-sm text-slate-100 font-medium">Pico 4 Ultra + 5 Tracker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 아카데믹 소프트웨어 & 개발 스택 -->
+                <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+                    <h3 class="text-sm font-bold tracking-widest text-slate-400 tech-font uppercase mb-4">DEV TECH STACK</h3>
+                    <div class="space-y-4">
+                        <!-- Python -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="font-bold text-slate-200">Python Programming</span>
+                                <span class="text-indigo-400 tech-font">85%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-indigo-500 h-full rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <!-- Unity / C# -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="font-bold text-slate-200">Unity 3D / C#</span>
+                                <span class="text-purple-400 tech-font">80%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-purple-500 h-full rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <!-- Web Tech -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="font-bold text-slate-200">HTML / CSS / JS</span>
+                                <span class="text-emerald-400 tech-font">75%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-emerald-500 h-full rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 전공 및 학업 소양 -->
+                <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+                    <h3 class="text-sm font-bold tracking-widest text-slate-400 tech-font uppercase mb-3">EDUCATION & VISION</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        <strong>동양미래대학교</strong>에서 실용적이고 기계에 가까운 소프트웨어 지식을 탐색하고 있습니다. 웹 프레임워크 기초부터 컴퓨터 하드웨어 내부 아키텍처에 이르기까지, 배운 이론을 가상 현실 최적화 프로젝트에 직접 융합하며 나만의 실용적인 가치를 설계하고 있습니다.
+                    </p>
+                </div>
+
+            </aside>
+        </main>
+
+        <!-- 하단 카피라이트 -->
+        <footer class="mt-16 text-center text-xs text-slate-600 space-y-2">
+            <p class="tech-font">DESIGNED & POWERED BY INTERACTIVE CANVAS SYSTEM</p>
+            <p>&copy; 2026 Park Yeon-woo. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- 인터랙티브 파티클 로직 (JS) -->
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 슬라이더 및 엘리먼트 참조
+        const countInput = document.getElementById('particleCount');
+        const countVal = document.getElementById('countVal');
+        const speedInput = document.getElementById('particleSpeed');
+        const speedVal = document.getElementById('speedVal');
+        const themeSelect = document.getElementById('particleTheme');
+
+        // 상태 변수 정의
+        let particlesArray = [];
+        let numberOfParticles = parseInt(countInput.value);
+        let speedMultiplier = parseInt(speedInput.value) / 5;
+        let activeColorTheme = themeSelect.value;
+
+        // 마우스 상호작용 지점 객체
+        const mouse = {
+            x: null,
+            y: null,
+            radius: 130 // 반응 범위
+        };
+
+        // 화면 크기 조정 처리
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init(); // 크기가 변할 때 파티클 재생성
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // 마우스 및 터치 감지
+        window.addEventListener('mousemove', function(e) {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('mouseout', function() {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        window.addEventListener('touchend', function() {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // 테마 색상 맵 매핑
+        const themeColors = {
+            indigo: {
+                primary: 'rgba(99, 102, 241, opacity)',
+                raw: [99, 102, 241]
+            },
+            purple: {
+                primary: 'rgba(168, 85, 247, opacity)',
+                raw: [168, 85, 247]
+            },
+            emerald: {
+                primary: 'rgba(16, 185, 129, opacity)',
+                raw: [16, 185, 129]
+            }
+        };
+
+        // 개별 파티클 클래스
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1.2;
+                this.baseSpeedX = (Math.random() * 2 - 1);
+                this.baseSpeedY = (Math.random() * 2 - 1);
+                this.speedX = this.baseSpeedX * speedMultiplier;
+                this.speedY = this.baseSpeedY * speedMultiplier;
+            }
+
+            // 실시간 속도 업데이트
+            updateSpeed() {
+                this.speedX = this.baseSpeedX * speedMultiplier;
+                this.speedY = this.baseSpeedY * speedMultiplier;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // 벽 충돌 방지 및 튕기기
+                if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
+                if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
+
+                // 마우스와의 간섭 처리 (가까워지면 아주 살짝 밀어냄)
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = this.x - mouse.x;
+                    let dy = this.y - mouse.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        this.x += (dx / distance) * force * 3;
+                        this.y += (dy / distance) * force * 3;
+                    }
+                }
+            }
+
+            draw() {
+                const rgb = themeColors[activeColorTheme].raw;
+                ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // 파티클 생성 및 초기화
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // 거리 기반 선 그리기 및 렌더링
+        function connect() {
+            let opacityValue = 1;
+            const rgb = themeColors[activeColorTheme].raw;
+
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // 일정한 임계치보다 가까우면 선 연결
+                    if (distance < 110) {
+                        // 선 불투명도 조절
+                        opacityValue = 1 - (distance / 110);
+                        ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacityValue * 0.18})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // 애니메이션 루프
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            connect();
+            requestAnimationFrame(animate);
+        }
+
+        // 컨트롤러 상호작용 등록 이벤트
+        countInput.addEventListener('input', function(e) {
+            numberOfParticles = parseInt(e.target.value);
+            countVal.textContent = numberOfParticles;
+            init();
+        });
+
+        speedInput.addEventListener('input', function(e) {
+            const rawSpeed = parseInt(e.target.value);
+            speedMultiplier = rawSpeed / 5;
+            speedVal.textContent = rawSpeed;
+            particlesArray.forEach(p => p.updateSpeed());
+        });
+
+        themeSelect.addEventListener('change', function(e) {
+            activeColorTheme = e.target.value;
+        });
+
+        // 문서 시작 지점 및 실행 보장
+        window.onload = function() {
+            resizeCanvas();
+            animate();
+        };
+    </script>
+</body>
+</html>
